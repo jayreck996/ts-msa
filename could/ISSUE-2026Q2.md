@@ -1,3 +1,13 @@
+## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Step 7: Azure Deployment (Starting)
+
+| What | Status |
+|------|--------|
+| ts-msa GitHub repo | LIVE (private, jayreck996/ts-msa) |
+| back/ .NET 10 API | Local only (C:\Users\tnako\Documents\GitHub\ts-msa\back\) |
+| front/ React app | Local only |
+| Azure App Service (back) | Not created yet |
+| Azure Static Web Apps (front) | Not created yet |
+
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - DB Hosting Decision
 - DB: SQLite file (quiz.db) hosted on Azure App Service local filesystem
 - Resets on redeploy - acceptable for MSA assessment (markers won't redeploy)
