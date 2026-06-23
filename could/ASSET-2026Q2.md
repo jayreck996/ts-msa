@@ -1,3 +1,17 @@
+## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: Test Setup References
+- Backend test project: ts-msa/back.tests/QuizApi.Tests.csproj
+  - Packages: xunit, Microsoft.EntityFrameworkCore.InMemory, project ref to back/QuizApi.csproj
+  - Helper: back.tests/Helpers/DbHelper.cs - creates isolated in-memory DB per test (Guid name)
+  - Test files: Controllers/CategoriesControllerTests.cs, UsersControllerTests.cs, QuizzesControllerTests.cs, LeaderboardControllerTests.cs
+- Frontend test setup: ts-msa/front/
+  - Packages: vitest, @vitest/coverage-v8, jsdom, @testing-library/react, @testing-library/jest-dom, @testing-library/user-event
+  - Config: vite.config.ts test block - environment jsdom, globals true, setupFiles src/test/setup.ts
+  - Setup file: src/test/setup.ts - imports @testing-library/jest-dom
+  - Test files: src/pages/__tests__/Home.test.tsx, Quizzes.test.tsx, Leaderboard.test.tsx
+  - Scripts: npm test (vitest run) | npm run test:watch (vitest)
+- Run backend tests: cd back.tests && dotnet test
+- Run frontend tests: cd front && npm test
+
 ## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: Monorepo File Structure
 - ts-msa/back/ - .NET 10 Web API
   - Controllers/: AttemptsController, BadgesController, CategoriesController, LeaderboardController, OptionsController, QuestionsController, QuizzesController, UsersController
