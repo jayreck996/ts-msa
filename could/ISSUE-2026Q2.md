@@ -1,3 +1,10 @@
+## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - DB Hosting Decision
+- DB: SQLite file (quiz.db) hosted on Azure App Service local filesystem
+- Resets on redeploy - acceptable for MSA assessment (markers won't redeploy)
+- SQLite survives between requests (all reads/writes work normally during marking)
+- Decision: keep SQLite, no Azure SQL needed - zero cost, zero extra setup
+- Next: Step 7 - deploy back/ to Azure App Service + front/ to Azure Static Web Apps
+
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Step 5 DONE: Unit Tests (22 passing)
 - Backend back.tests/ (xUnit + EF Core InMemory) - 13 tests PASSED:
   - CategoriesControllerTests: GetAll empty, Create, GetById not found, Delete, Update
