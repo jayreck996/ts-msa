@@ -1,3 +1,19 @@
+## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: Monorepo File Structure
+- ts-msa/back/ - .NET 10 Web API
+  - Controllers/: AttemptsController, BadgesController, CategoriesController, LeaderboardController, OptionsController, QuestionsController, QuizzesController, UsersController
+  - Data/AppDbContext.cs - EF Core DbContext, SQLite, cascade rules
+  - Models/: Badge, Category, Option, Question, Quiz, QuizAttempt, User, UserBadge
+  - Program.cs - CORS, Scalar, EF Core, DB auto-create
+  - specs/README.md - AI prompts and design decisions log
+  - back/QuizApi.csproj - packages: EF Core Sqlite, EF Core Design, Scalar.AspNetCore, OpenApi
+- ts-msa/front/ - React + TypeScript + Vite
+  - src/api.ts - typed fetch client, all endpoints, shared interfaces
+  - src/App.tsx - BrowserRouter, NavLink, 3 routes
+  - src/pages/: Home.tsx, Quizzes.tsx, Leaderboard.tsx
+  - staticwebapp.config.json - Azure Static Web Apps SPA fallback
+  - .env.example - VITE_API_URL template
+- ts-msa/could/ - ISSUE-2026Q2.md, ASSET-2026Q2.md
+
 ## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: Azure Deployment Stack
 - Frontend: Azure Static Web Apps - free tier | https://portal.azure.com
 - Backend: Azure App Service - free F1 tier | .NET 10 Web API
