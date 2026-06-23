@@ -1,3 +1,10 @@
+## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Monorepo Shape + Unit Tests (Step 5)
+- Repo: https://github.com/jayreck996/ts-msa (private monorepo)
+- back/: .NET 10 Web API | Models (User,Category,Quiz,Question,Option,QuizAttempt,Badge,UserBadge) | Controllers (Users,Categories,Quizzes,Questions,Options,Attempts,Badges,Leaderboard) | EF Core SQLite | Scalar at /scalar | CORS enabled | DB auto-created on startup
+- front/: React + TypeScript + Vite | React Router | Pages: Home, Quizzes, Leaderboard | api.ts typed fetch client | VITE_API_URL env var | staticwebapp.config.json (Azure SPA routing)
+- could/: ISSUE-2026Q2.md + ASSET-2026Q2.md (this doc)
+- Next: Step 5 - unit tests for back/ (xUnit) and front/ (Vitest)
+
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Monorepo Structure + Azure Deployment Plan
 - Repo structure: ts-msa/ monorepo with back/ (API) and front/ (React) folders
 - back/ renamed from QuizApi/ - .NET 10 Web API, EF Core, SQLite, Scalar at /scalar
