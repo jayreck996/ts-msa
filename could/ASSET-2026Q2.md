@@ -1,3 +1,14 @@
+## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | Deployment | Status
+- Category: Deployment | Subcategory: Current State
+
+| What | Status |
+|------|--------|
+| ts-msa GitHub repo | LIVE (private, jayreck996/ts-msa) |
+| back/ .NET 10 API | Local only (C:\Users\tnako\Documents\GitHub\ts-msa\back\) |
+| front/ React app | Local only |
+| Azure App Service (back) | Not created yet |
+| Azure Static Web Apps (front) | Not created yet |
+
 ## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | DB | SQLite on Azure App Service
 - Category: Database | Subcategory: Hosting Decision
 - Engine: SQLite (file-based, quiz.db) - EF Core auto-creates on startup via EnsureCreated()
