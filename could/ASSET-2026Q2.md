@@ -1,0 +1,66 @@
+## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: ts-msa Repo + AI Policy
+- Repo: https://github.com/jayreck996/ts-msa (private)
+- Stack: .NET 10 Web API + EF Core + SQLite | React + TypeScript + Vite
+- AI tools allowed: Claude, GitHub Copilot, ChatGPT - explicitly encouraged in Phase 2 README
+- AI usage must be logged in /specs folder (prompts + design decisions) - marked as part of assessment
+- GitHub naming rules: letters/numbers/hyphens/underscores/dots | no spaces | no leading dot or hyphen | max 100 chars
+
+## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: Submission Requirements Summary
+- Repo must be public with all files needed to run the code
+- Backend: .NET 10 Web API | CRUD endpoints | EF Core | SQLite | Scalar docs at /scalar
+- Frontend: React + TypeScript + Vite | proper UI (MUI/Mantine/Tailwind) | mobile-friendly
+- Tests: unit tests for both frontend and backend
+- Deployment: live URL required (Render / Railway / Azure / Vercel / Netlify)
+- Advanced features: minimum 3, listed in README
+- /specs folder: AI prompts used + design decisions documented throughout build
+- AI tools explicitly encouraged: Claude, GitHub Copilot, ChatGPT
+- Academic integrity: must understand and own your own work - copying flagged and disqualified
+
+## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: Software Stream References
+- Repo: https://github.com/NZMSA/2026-Phase-2
+- Assessment PDF: https://github.com/NZMSA/2026-Phase-2/blob/main/software/2026%20Phase%202%20-%20Software%20Assessment.pdf
+- Demo scaffold: https://github.com/NZMSA/2026-Phase-2/tree/main/software/demo
+- Submission form (opens July 13): https://forms.office.com/r/tRVKyQZVZ7
+- Tech stack: .NET 10 Web API + EF Core + SQLite | React + TypeScript + Vite
+- Demo runs on: backend localhost:5000 (Scalar docs at /scalar) | frontend localhost:5173
+- Office Hours (Fridays 7:30-8 PM NZST): July 3, July 17, July 31 - Discord #help-software voice channel
+
+# ASSET Log - MSA (migrated from -jay)
+
+## ASSET:-jay 2026-06-15 09:38 -> AUT Official Transcript (Eligibility Proof)
+- Document: Transcript of Official Academic Record - Auckland University of Technology
+- Student: Jay Reck | ID: 20120687 | NSI: 130305394
+- Covers: 2023, 2024, 2025, 2026 academic years
+- 2025 courses confirmed: COMP702, COMP703, COMP707, COMP705, COMP716, COMP718, COMP721 + others (S1+S2)
+- Google Drive: https://drive.google.com/file/d/1xTH3ADpmICWiFCjTkehEyAxDy5XrBbit/view?usp=sharing
+- Used for: NZMSA 2026 Phase 2/3 eligibility proof submission
+
+## ASSET:-jay 2026-06-15 09:38 -> NZMSA 2026-Phase-1: Programme Reference + Badge Map
+- Programme: MSA NZ 2026 Phase 1 - Software Development Stream
+- Ref: https://github.com/NZMSA/2026-Phase-1
+- Submission form: https://forms.office.com/r/6nssmi68X6
+- SW Dev collection: https://learn.microsoft.com/en-nz/collections/n2kyajtpq8my3q
+- Deadline: 29 May 2026 11:59pm (missed - attempt late submission)
+- Week 1 COMPLETE: Introduction to GitHub | Write your first C# code | Introduction to .NET | Create a new .NET project and work with dependencies | Introduction to .NET web development with ASP.NET Core | Build your first ASP.NET Core web app | Customize ASP.NET Core behavior with middleware
+- Week 5 COMPLETE: Introduction to Transact-SQL | Sort and filter results in T-SQL | Combine multiple tables with JOINs in T-SQL | Modify data with T-SQL
+- Week 6 (4/5): Use a database with minimal API EF Core ASP.NET Core | Build CI workflows by GitHub Actions | Build a containerized web application with Docker | Host a web application with Azure App Service
+- Pending: React Tic-Tac-Toe (W2) | TypeScript tutorials W3-W4 (no badge) | Introduction to software testing concepts (W6)
+
+## ASSET:-jay 2026-06-15 09:38 -> NZMSA 2024-Phase-1: 16 Microsoft Learn Badges
+- Stream: Software Development
+- Introduction to GitHub (4/17/2026)
+- Write your first C# code (4/17/2026)
+- Introduction to .NET (4/19/2026)
+- Create a new .NET project and work with dependencies (4/19/2026)
+- Get started with web development using Visual Studio Code (4/19/2026)
+- Introduction to .NET web development with ASP.NET Core (4/19/2026)
+- Build your first ASP.NET Core web app (4/19/2026)
+- Customize ASP.NET Core behavior with middleware (4/19/2026)
+- Introduction to Transact-SQL (4/19/2026)
+- Sort and filter results in T-SQL (4/19/2026)
+- Combine multiple tables with JOINs in T-SQL (4/19/2026)
+- Modify data with T-SQL (4/19/2026)
+- Use a database with minimal API, Entity Framework Core, and ASP.NET Core (4/19/2026)
+- Build continuous integration workflows by using GitHub Actions (4/19/2026)
+- Build a containerized web application with Docker (4/19/2026)
+- Host a web application with Azure App Service (4/19/2026)
