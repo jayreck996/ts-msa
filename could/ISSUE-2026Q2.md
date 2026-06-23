@@ -1,3 +1,14 @@
+## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Monorepo Structure + Azure Deployment Plan
+- Repo structure: ts-msa/ monorepo with back/ (API) and front/ (React) folders
+- back/ renamed from QuizApi/ - .NET 10 Web API, EF Core, SQLite, Scalar at /scalar
+- front/ to scaffold: React + TypeScript + Vite + staticwebapp.config.json (SPA routing fallback)
+- Deployment: Azure Static Web Apps (front) + Azure App Service free F1 tier (back)
+- Azure Static Web Apps: free tier | GitHub Actions CI/CD auto-wired on push | global CDN
+- API base URL in .env for local/Azure swap: VITE_API_URL=http://localhost:5000 (local)
+- staticwebapp.config.json required for React Router - prevents 404 on direct URL access
+- MSA alignment: Microsoft program + Microsoft Azure = strong fit for assessment
+- Next: scaffold front/ with Vite + React + TypeScript wired for Azure Static Web Apps
+
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Repo Created + Data Model Finalised
 - Repo: https://github.com/jayreck996/ts-msa (private, jayreck996)
 - Description: NZMSA 2026 Phase 2 - Gamified Quiz Platform (.NET 10 + React/TypeScript)
