@@ -1,3 +1,11 @@
+## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | DB | SQLite on Azure App Service
+- Category: Database | Subcategory: Hosting Decision
+- Engine: SQLite (file-based, quiz.db) - EF Core auto-creates on startup via EnsureCreated()
+- Local: runs in back/ folder during development
+- Azure: lives on App Service ephemeral filesystem - resets on redeploy, persists between requests
+- MSA fit: sufficient - markers access live app, no redeploy during marking window
+- Ruled out: Azure SQL (~/mo, overkill) | Cosmos DB (free tier but high setup effort)
+
 ## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | Integration Tests | back.tests/
 - Category: Integration Tests | Subcategory: xUnit + EF Core InMemory
 - 13 tests, 0 failures - Controllers: Categories, Users, Quizzes, Leaderboard
