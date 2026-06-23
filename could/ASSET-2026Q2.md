@@ -1,3 +1,16 @@
+## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | Integration Tests | back.tests/
+- Category: Integration Tests | Subcategory: xUnit + EF Core InMemory
+- 13 tests, 0 failures - Controllers: Categories, Users, Quizzes, Leaderboard
+- Why integration: real EF Core pipeline, in-memory DB per test (no mocking)
+- Run: cd back.tests && dotnet test
+
+## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | Unit Tests | front/__tests__/
+- Category: Unit Tests | Subcategory: Vitest + React Testing Library
+- 9 tests, 0 failures - Pages: Home, Quizzes, Leaderboard
+- Why unit: API layer mocked via vi.mock - no network, no backend
+- Config: jsdom env, globals true, setup file imports jest-dom matchers
+- Run: cd front && npm test (CI) | npm run test:watch (dev)
+
 ## ASSET:-jay 2026-06-24 -> NZMSA 2026-Phase-2: Test Setup References
 - Backend test project: ts-msa/back.tests/QuizApi.Tests.csproj
   - Packages: xunit, Microsoft.EntityFrameworkCore.InMemory, project ref to back/QuizApi.csproj
