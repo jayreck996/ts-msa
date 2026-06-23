@@ -1,3 +1,16 @@
+## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Step 5 DONE: Unit Tests (22 passing)
+- Backend back.tests/ (xUnit + EF Core InMemory) - 13 tests PASSED:
+  - CategoriesControllerTests: GetAll empty, Create, GetById not found, Delete, Update
+  - UsersControllerTests: Create, GetById, Delete
+  - QuizzesControllerTests: Create, GetAll filter by difficulty, Delete
+  - LeaderboardControllerTests: ordered by points, top N param
+- Frontend front/src/pages/__tests__/ (Vitest + React Testing Library) - 9 tests PASSED:
+  - Home.test.tsx: heading renders, tagline renders
+  - Quizzes.test.tsx: loading state, list render, empty message, error message
+  - Leaderboard.test.tsx: loading state, entries render, empty message
+- Test setup: Vitest globals + jsdom + @testing-library/jest-dom setup.ts
+- Next: Step 6 - confirm 3 advanced features (badge system, leaderboard, streak tracking already wired in back/)
+
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Monorepo Shape + Unit Tests (Step 5)
 - Repo: https://github.com/jayreck996/ts-msa (private monorepo)
 - back/: .NET 10 Web API | Models (User,Category,Quiz,Question,Option,QuizAttempt,Badge,UserBadge) | Controllers (Users,Categories,Quizzes,Questions,Options,Attempts,Badges,Leaderboard) | EF Core SQLite | Scalar at /scalar | CORS enabled | DB auto-created on startup
