@@ -1,3 +1,8 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 6 DONE: Surface Advanced Features in UI
+- Added front/src/pages/Badges.tsx - shows all badges, dims unearned ones, user ID lookup to check earned badges
+- Updated front/src/App.tsx - added Badges NavLink + Route at /badges
+- Leaderboard already showed streak + level - no changes needed
+- All 3 advanced features now visible in UI: badge system (/badges), leaderboard (/leaderboard), streak (leaderboard table)
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Low Hanging Fruit Roadmap
 
 Agreed task execution order for remaining Phase 2 work, prioritised by effort:
