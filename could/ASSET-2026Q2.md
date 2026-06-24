@@ -1,3 +1,9 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Badges Page
+- File: front/src/pages/Badges.tsx
+- Shows all badges from GET /api/badges
+- User ID input + lookup calls GET /api/badges/user/{id} to show earned badges
+- Unearned badges dimmed at 40% opacity, earned marked with checkmark
+- Wired at /badges route in App.tsx
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Low Hanging Fruit Roadmap
 - Roadmap agreed 2026-06-25 with Claude (Sonnet 4.6)
 - Order: README (done) -> /specs -> UI features (task 6) -> Scalar (task 10) -> UI design (task 7) -> B1 upgrade + back deploy (task 8) -> front deploy (task 9) -> make public + verify (tasks 13-14)
