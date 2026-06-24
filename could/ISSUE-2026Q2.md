@@ -1,3 +1,7 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 12 DONE: Root README.md
+- Created README.md at repo root via GitHub API
+- Sections: stack table, advanced features (badge system, leaderboard, streak tracking), gamification rules, running locally (backend + frontend), tests, live URLs, AI tools
+- File: https://github.com/jayreck996/ts-msa/blob/main/README.md
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Remaining Tasks
 
 | # | Task | Status |
