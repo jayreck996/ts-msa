@@ -1,3 +1,12 @@
+## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Step 7: Azure Deployment Blocker
+- Azure CLI 2.87.0 installed, logged in as ync5389@autuni.ac.nz (AUT University tenant)
+- Subscription: Azure for Students | ID: a266860f-628b-4bde-9a84-df8ca2e0ac4e | $100 credit
+- Resource group created: rg-ts-msa (Australia East)
+- App Service plan created: plan-ts-msa (F1 Free, Linux)
+- Web app created: quizapi-ts-msa.azurewebsites.net (.NET 10 Linux)
+- Deployment failed: F1 free tier hit QuotaExceeded (60 min CPU/day limit consumed by deploy attempts)
+- Decision pending: upgrade to B1 Basic (~$13/mo from $100 credit) for reliable deployment
+
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Step 7: Azure Deployment (Starting)
 
 | What | Status |
