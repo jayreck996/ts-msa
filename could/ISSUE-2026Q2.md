@@ -1,3 +1,11 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Deployment Plan: Tasks 8 + 9
+- Task 9 (front): Azure Static Web Apps free tier - independent of back, doing now
+  - Repo: jayreck996/ts-msa | branch: main | app location: front | output: dist
+  - GitHub Actions CI/CD auto-generated on link
+- Task 8 (back): needs B1 upgrade (~/mo, ~7 months from  credit)
+  - Resources exist: rg-ts-msa, plan-ts-msa (F1 exhausted), quizapi-ts-msa.azurewebsites.net
+  - Steps: az appservice plan update --sku B1, dotnet publish, az webapp deploy
+- Order: front first (free), then B1 upgrade + back redeploy
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 10: Scalar API Docs
 - Code-complete: Scalar.AspNetCore package installed, app.MapScalarApiReference() wired in Program.cs
 - Live URL: https://quizapi-ts-msa.azurewebsites.net/scalar (pending Task 8 - B1 upgrade + redeploy)
