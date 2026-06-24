@@ -1,3 +1,7 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Low Hanging Fruit Roadmap
+- Roadmap agreed 2026-06-25 with Claude (Sonnet 4.6)
+- Order: README (done) -> /specs -> UI features (task 6) -> Scalar (task 10) -> UI design (task 7) -> B1 upgrade + back deploy (task 8) -> front deploy (task 9) -> make public + verify (tasks 13-14)
+- Rationale: write-only tasks first, then frontend-only (no Azure needed), then deployment tier last
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Docs | Root README.md
 - Category: Documentation | Subcategory: Root README
 - File: README.md at repo root
