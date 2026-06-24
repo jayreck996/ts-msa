@@ -1,3 +1,7 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Deployment Plan
+- Front: Azure Static Web Apps free tier | repo: jayreck996/ts-msa | branch: main | app location: front | output: dist
+- Back: upgrade plan-ts-msa F1 -> B1 | az appservice plan update --name plan-ts-msa --resource-group rg-ts-msa --sku B1
+- Azure account: ync5389@autuni.ac.nz (AUT tenant) | subscription: Azure for Students | a266860f-628b-4bde-9a84-df8ca2e0ac4e
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Scalar API Docs
 - Package: Scalar.AspNetCore in back/QuizApi.csproj
 - Wired in back/Program.cs: app.MapOpenApi() + app.MapScalarApiReference()
