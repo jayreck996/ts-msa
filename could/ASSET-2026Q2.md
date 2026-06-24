@@ -1,3 +1,9 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Docs | Root README.md
+- Category: Documentation | Subcategory: Root README
+- File: README.md at repo root
+- URL: https://github.com/jayreck996/ts-msa/blob/main/README.md
+- Sections: stack, advanced features, gamification rules, running locally, tests, live URLs, AI tools note
+- Task 12 DONE
 ## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | Deployment | Azure Resources Created
 - Category: Deployment | Subcategory: Azure Resources
 
