@@ -1,3 +1,23 @@
+## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Remaining Tasks
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | Gamification idea (Quiz platform) | Done |
+| 2 | Data models (no booleans) | Done |
+| 3 | .NET 10 backend - CRUD, EF Core, SQLite | Done |
+| 4 | React + TypeScript frontend (basic) | Done |
+| 5 | Unit + integration tests (22 passing) | Done |
+| 6 | Surface advanced features in UI (badges, streak, leaderboard) | TODO |
+| 7 | Proper UI design (MUI/Mantine/Tailwind, mobile-friendly) | TODO |
+| 8 | Deploy back/ (upgrade B1, redeploy) | Blocked |
+| 9 | Deploy front/ (Azure Static Web Apps) | TODO |
+| 10 | Scalar API docs live at /scalar | TODO |
+| 11 | /specs folder - log more AI prompts + decisions | TODO |
+| 12 | Root README.md documenting the project | TODO |
+| 13 | Make repo public before submission | Required |
+| 14 | Verify all links work in Incognito | Required |
+| 15 | Submit via form (opens July 13) | Deadline Aug 2 |
+
 ## ISSUE:-jay 2026-06-24 -> NZMSA 2026: Phase 2 - Step 7: Azure Deployment Blocker
 - Azure CLI 2.87.0 installed, logged in as ync5389@autuni.ac.nz (AUT University tenant)
 - Subscription: Azure for Students | ID: a266860f-628b-4bde-9a84-df8ca2e0ac4e | $100 credit
