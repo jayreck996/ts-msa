@@ -1,3 +1,16 @@
+## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | Deployment | Azure Resources Created
+- Category: Deployment | Subcategory: Azure Resources
+
+| Resource | Name | Status |
+|----------|------|--------|
+| Resource Group | rg-ts-msa (Australia East) | Created |
+| App Service Plan | plan-ts-msa (Linux) | Created |
+| Web App (back) | quizapi-ts-msa.azurewebsites.net | QuotaExceeded - F1 limit hit |
+| Azure Static Web Apps (front) | Not created yet | Pending |
+
+- Blocker: F1 free tier 60 min/day CPU quota exhausted during deploy attempts
+- Fix: upgrade plan-ts-msa to B1 Basic (~$13/mo, covered by $100 student credit)
+
 ## ASSET:-jay 2026-06-24 -> NZMSA Phase-2 | Deployment | Status
 - Category: Deployment | Subcategory: Current State
 
