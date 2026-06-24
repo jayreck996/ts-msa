@@ -1,3 +1,25 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Low Hanging Fruit Roadmap
+
+Agreed task execution order for remaining Phase 2 work, prioritised by effort:
+
+**Tier 1 - Pure writing, zero code risk**
+- Task 12: Root README.md - DONE (2026-06-25)
+- Task 11: /specs entries - in progress
+
+**Tier 2 - Backend already wired, frontend work only**
+- Task 6: Surface badges, streak, leaderboard in UI (API endpoints exist)
+- Task 10: Scalar docs (Scalar.AspNetCore already in Program.cs - verify live URL)
+
+**Tier 3 - UI overhaul**
+- Task 7: Proper UI design (MUI/Mantine/Tailwind, mobile-friendly)
+
+**Tier 4 - Blocked on Azure cost decision**
+- Task 8: Upgrade plan-ts-msa F1 -> B1 Basic (~/mo from  credit), redeploy back/
+- Task 9: Azure Static Web Apps for front/ (depends on back being live)
+
+**Final - Pre-submission**
+- Task 13: Make repo public
+- Task 14: Verify all links in Incognito
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 12 DONE: Root README.md
 - Created README.md at repo root via GitHub API
 - Sections: stack table, advanced features (badge system, leaderboard, streak tracking), gamification rules, running locally (backend + frontend), tests, live URLs, AI tools
