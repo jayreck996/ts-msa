@@ -1,3 +1,7 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Scalar API Docs
+- Package: Scalar.AspNetCore in back/QuizApi.csproj
+- Wired in back/Program.cs: app.MapOpenApi() + app.MapScalarApiReference()
+- Live endpoint: https://quizapi-ts-msa.azurewebsites.net/scalar (available after deployment)
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Badges Page
 - File: front/src/pages/Badges.tsx
 - Shows all badges from GET /api/badges
