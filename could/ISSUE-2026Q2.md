@@ -1,3 +1,7 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 10: Scalar API Docs
+- Code-complete: Scalar.AspNetCore package installed, app.MapScalarApiReference() wired in Program.cs
+- Live URL: https://quizapi-ts-msa.azurewebsites.net/scalar (pending Task 8 - B1 upgrade + redeploy)
+- No code changes needed
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 6 DONE: Surface Advanced Features in UI
 - Added front/src/pages/Badges.tsx - shows all badges, dims unearned ones, user ID lookup to check earned badges
 - Updated front/src/App.tsx - added Badges NavLink + Route at /badges
