@@ -1,3 +1,39 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Zip Path Shape: Windows vs Linux
+
+Step 1 - dotnet publish on Windows (real folder tree, all platforms):
+  publish/
+  ├── QuizApi.dll
+  ├── QuizApi.runtimeconfig.json
+  └── runtimes/
+      ├── linux-x64/
+      │   └── native/
+      │       └── libe_sqlite3.so
+      ├── win-x64/
+      │   └── native/
+      │       └── e_sqlite3.dll
+      └── osx-arm64/
+          └── native/
+              └── libe_sqlite3.dylib
+
+Step 2 - Compress-Archive zip entry names (backslashes baked in):
+  QuizApi.dll
+  runtimes\linux-x64\native\libe_sqlite3.so   <- whole thing is ONE string
+  runtimes\win-x64\native\e_sqlite3.dll
+  runtimes\osx-arm64\native\libe_sqlite3.dylib
+
+Step 3 - Linux rsync extracts:
+  /home/site/wwwroot/runtimes\linux-x64\native\libe_sqlite3.so
+                               ^ Linux reads this entire chunk as ONE filename
+                                 No subdirectories created -> Invalid argument
+
+Step 4 - After fix (-r linux-x64 --no-self-contained):
+  publish/
+  ├── QuizApi.dll
+  ├── QuizApi.runtimeconfig.json
+  └── runtimes/
+      └── linux-x64/
+          └── native/
+              └── libe_sqlite3.so   <- only target platform, forward slashes -> extracts cleanly
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | App Service Architecture
 - API + SQLite db on same instance filesystem: /home/site/wwwroot/
 - DB file: quiz.db - auto-created on startup via EnsureCreated()
