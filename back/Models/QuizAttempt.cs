@@ -1,4 +1,4 @@
-namespace QuizApi.Models;
+﻿namespace QuizApi.Models;
 
 public class QuizAttempt
 {
@@ -9,6 +9,6 @@ public class QuizAttempt
     public int PointsEarned { get; set; }
     public DateTime CompletedAt { get; set; } = DateTime.UtcNow;
 
-    public User User { get; set; } = null!;
-    public Quiz Quiz { get; set; } = null!;
+    public User? User { get; set; }
+    public Quiz? Quiz { get; set; }
 }
