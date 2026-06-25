@@ -1,3 +1,7 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | F1 Cold Start Behaviour
+- App sleeps after ~20 min inactivity, wakes on first request (~30-60s warmup)
+- API returns 200 once warm - confirmed with CORS origin quizfrontsa.z8.web.core.windows.net
+- Workaround for markers: load the site, wait ~60s on first visit, then refresh
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Zip Path Shape: Windows vs Linux
 
 Step 1 - dotnet publish on Windows (real folder tree, all platforms):
