@@ -1,3 +1,17 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 8 DONE: Backend Deployed (F1, no upgrade needed)
+- First deploy attempt failed: rsync error "Invalid argument" on all runtimes/ paths
+- Root cause: dotnet publish on Windows embeds backslashes in zip paths; Linux rsync treats \ as literal filename character, not directory separator
+- Fix: dotnet publish -c Release -r linux-x64 --no-self-contained - targets only linux-x64, drops all other platform native binaries
+- Zip size dropped 18.77 MB -> 3.91 MB, rsync succeeded, status: RuntimeSuccessful
+- No B1 upgrade needed - F1 quota was fine for a single clean deploy
+- Live: https://quizapi-ts-msa.azurewebsites.net | Scalar: https://quizapi-ts-msa.azurewebsites.net/scalar
+
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Architecture: DB + Backend Co-located on App Service
+- SQLite quiz.db and .NET API both live under /home/site/wwwroot/ on the same App Service instance
+- No network hop - file I/O only, fast reads/writes
+- DB resets on redeploy - zip deploy overwrites wwwroot, EnsureCreated() rebuilds schema on startup
+- F1 is shared compute - instance can be recycled, filesystem not guaranteed persistent long-term
+- Acceptable for MSA marking: markers access live app in one session, no redeploy during marking window
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 8: Backend Deployment Plan
 - Azure Blob Storage not applicable for backend - static files only, not compute
 - App Service already provisioned in australiaeast (quizapi-ts-msa.azurewebsites.net) - different from SWA blocker
