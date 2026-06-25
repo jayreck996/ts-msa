@@ -1,3 +1,17 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | App Service Architecture
+- API + SQLite db on same instance filesystem: /home/site/wwwroot/
+- DB file: quiz.db - auto-created on startup via EnsureCreated()
+- DB resets on every redeploy (zip overwrites wwwroot)
+- F1 shared compute - no dedicated instance, no long-term filesystem guarantee
+- Seed data must be re-entered after each redeploy
+
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Backend Live: quizapi-ts-msa
+- URL: https://quizapi-ts-msa.azurewebsites.net
+- Scalar docs: https://quizapi-ts-msa.azurewebsites.net/scalar
+- Plan: plan-ts-msa (F1, australiaeast) - no upgrade needed
+- Publish command: dotnet publish -c Release -r linux-x64 --no-self-contained -o ./publish (run from back/)
+- Deploy command: az webapp deploy --resource-group rg-ts-msa --name quizapi-ts-msa --src-path ./publish.zip --type zip --subscription a266860f-628b-4bde-9a84-df8ca2e0ac4e
+- DB: SQLite (quiz.db) on App Service filesystem - resets on redeploy, persists between requests
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Backend Deploy Plan
 - Existing: quizapi-ts-msa.azurewebsites.net | plan-ts-msa (F1, australiaeast)
 - Upgrade: az appservice plan update --name plan-ts-msa --resource-group rg-ts-msa --sku B1
