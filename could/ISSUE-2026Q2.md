@@ -1,3 +1,8 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | F1 Cold Start: Backend Sleep on Inactivity
+- F1 free tier sleeps after ~20 min of no traffic
+- First request after sleep takes 30-60s to wake up - browser shows network error during warmup
+- Always On feature requires B1+ tier, not available on F1
+- Acceptable for MSA marking: markers hit the app once, wait for warmup, then it stays responsive
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Root Cause: Windows Backslash Path in Zip
 - dotnet publish (no -r flag) on Windows includes SQLite native binaries for all platforms in runtimes\ subfolders
 - Compress-Archive stores zip entries using backslashes: runtimes\linux-x64\native\libe_sqlite3.so
