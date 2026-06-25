@@ -1,3 +1,18 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 9 DONE: Front Deployed
+- Deployed to Azure Blob Storage static website (not Azure Static Web Apps - blocked)
+- Live URL: https://quizfrontsa.z8.web.core.windows.net/
+- API calls will 404 until Task 8 (B1 upgrade + back redeploy) is done
+
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Build Fix: Test Files in Production Build
+- npm run build failed - test globals (describe, it, expect) not found + vite.config.ts test block type error
+- Fix 1: tsconfig.app.json - added exclude for src/**/__tests__/** and src/test/**
+- Fix 2: vite.config.ts - changed import from vite to vitest/config so test block is typed correctly
+- Build clean after both fixes: 25 modules, 235kb JS, 4kb CSS
+
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Azure Static Web Apps: Blocked
+- All 5 valid regions (centralus, eastus2, westus2, westeurope, eastasia) rejected by student subscription policy
+- Error: RequestDisallowedByAzure on Microsoft.Web/staticSites resource type
+- Resolution: switched to Azure Blob Storage static website hosting (australiaeast, free)
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Deployment Plan: Tasks 8 + 9
 - Task 9 (front): Azure Static Web Apps free tier - independent of back, doing now
   - Repo: jayreck996/ts-msa | branch: main | app location: front | output: dist
