@@ -16,29 +16,27 @@ export default function Badges() {
     if (!isNaN(id)) api.getUserBadges(id).then(setEarned);
   }
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div className="container"><p className="empty">Loading...</p></div>;
 
   const earnedIds = new Set(earned.map(u => u.badgeId));
 
   return (
-    <div>
-      <h1>Badges</h1>
-      <div>
-        <input
-          type="number"
-          placeholder="Enter user ID"
-          value={userId}
-          onChange={e => setUserId(e.target.value)}
-        />
+    <div className="container">
+      <div className="page-header"><h1>Badges</h1></div>
+      <div className="lookup">
+        <input type="number" placeholder="Enter user ID" value={userId} onChange={e => setUserId(e.target.value)} />
         <button onClick={lookup}>Look up</button>
       </div>
-      <ul>
-        {badges.map(b => (
-          <li key={b.id} style={{ opacity: earnedIds.has(b.id) ? 1 : 0.4 }}>
-            <strong>{b.name}</strong>{earnedIds.has(b.id) ? ' checkmark' : ''} — {b.description}
-          </li>
-        ))}
-      </ul>
+      {badges.length === 0 && <p className="empty">No badges yet.</p>}
+      {badges.map(b => (
+        <div key={b.id} className={`card ${earnedIds.has(b.id) ? '' : 'dim'}`}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <h2 style={{ flex: 1 }}>{b.name} {earnedIds.has(b.id) ? '✓' : ''}</h2>
+            {earnedIds.has(b.id) && <span className="badge badge-purple">Earned</span>}
+          </div>
+          <p style={{ color: 'var(--muted)', fontSize: '0.9rem', marginTop: '0.3rem' }}>{b.description}</p>
+        </div>
+      ))}
     </div>
   );
 }
