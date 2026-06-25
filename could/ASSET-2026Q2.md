@@ -1,3 +1,18 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Build Fix: vite.config.ts
+- File: front/vite.config.ts
+- Changed: import { defineConfig } from 'vite' -> import { defineConfig } from 'vitest/config'
+- Fixes TS error: test property not recognised in vite's UserConfigExport type
+
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Build Fix: tsconfig.app.json
+- File: front/tsconfig.app.json
+- Added exclude: ["src/**/__tests__/**", "src/test/**"]
+- Prevents test files from being type-checked in production build
+
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Azure Blob Storage Static Site
+- Account: quizfrontsa | Resource group: rg-ts-msa | Region: australiaeast
+- Container:  | Static website enabled | 404 doc: index.html (SPA fallback)
+- Live URL: https://quizfrontsa.z8.web.core.windows.net/
+- Redeploy: az storage blob upload-batch --account-name quizfrontsa --source front/dist --destination  --subscription a266860f-628b-4bde-9a84-df8ca2e0ac4e --overwrite
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Deployment Plan
 - Front: Azure Static Web Apps free tier | repo: jayreck996/ts-msa | branch: main | app location: front | output: dist
 - Back: upgrade plan-ts-msa F1 -> B1 | az appservice plan update --name plan-ts-msa --resource-group rg-ts-msa --sku B1
