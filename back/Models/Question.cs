@@ -1,4 +1,4 @@
-namespace QuizApi.Models;
+﻿namespace QuizApi.Models;
 
 public class Question
 {
@@ -8,7 +8,7 @@ public class Question
     public int Points { get; set; }
     public int? CorrectOptionId { get; set; }
 
-    public Quiz Quiz { get; set; } = null!;
+    public Quiz? Quiz { get; set; }
     public Option? CorrectOption { get; set; }
     public ICollection<Option> Options { get; set; } = [];
 }
