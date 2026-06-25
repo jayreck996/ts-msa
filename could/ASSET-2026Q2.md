@@ -1,3 +1,9 @@
+## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Backend Deploy Plan
+- Existing: quizapi-ts-msa.azurewebsites.net | plan-ts-msa (F1, australiaeast)
+- Upgrade: az appservice plan update --name plan-ts-msa --resource-group rg-ts-msa --sku B1
+- Publish: dotnet publish -c Release -o ./publish (run from back/)
+- Deploy: az webapp deploy --resource-group rg-ts-msa --name quizapi-ts-msa --src-path ./publish
+- After deploy: rebuild front with VITE_API_URL=https://quizapi-ts-msa.azurewebsites.net + re-upload to blob
 ## ASSET:-jay 2026-06-25 -> NZMSA Phase-2 | Build Fix: vite.config.ts
 - File: front/vite.config.ts
 - Changed: import { defineConfig } from 'vite' -> import { defineConfig } from 'vitest/config'
