@@ -1,3 +1,10 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 8: Backend Deployment Plan
+- Azure Blob Storage not applicable for backend - static files only, not compute
+- App Service already provisioned in australiaeast (quizapi-ts-msa.azurewebsites.net) - different from SWA blocker
+- Only blocker: F1 free tier CPU quota exhausted from previous deploy attempts
+- Fix: upgrade plan-ts-msa F1 -> B1 Basic (~/mo, ~7 months from  student credit)
+- One command: az appservice plan update --name plan-ts-msa --resource-group rg-ts-msa --sku B1
+- Then: dotnet publish + az webapp deploy
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 9 DONE: Front Deployed
 - Deployed to Azure Blob Storage static website (not Azure Static Web Apps - blocked)
 - Live URL: https://quizfrontsa.z8.web.core.windows.net/
