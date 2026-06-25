@@ -1,3 +1,9 @@
+## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Root Cause: Windows Backslash Path in Zip
+- dotnet publish (no -r flag) on Windows includes SQLite native binaries for all platforms in runtimes\ subfolders
+- Compress-Archive stores zip entries using backslashes: runtimes\linux-x64\native\libe_sqlite3.so
+- Linux rsync reads the entire backslash string as ONE literal filename, not a directory path
+- Result: rsync tries to create a file named "runtimes\linux-x64\native\libe_sqlite3.so" in wwwroot -> Invalid argument
+- Fix: -r linux-x64 --no-self-contained drops all other platform folders, only linux-x64 remains, zip uses forward slashes
 ## ISSUE:-jay 2026-06-25 -> NZMSA Phase-2 | Task 8 DONE: Backend Deployed (F1, no upgrade needed)
 - First deploy attempt failed: rsync error "Invalid argument" on all runtimes/ paths
 - Root cause: dotnet publish on Windows embeds backslashes in zip paths; Linux rsync treats \ as literal filename character, not directory separator
