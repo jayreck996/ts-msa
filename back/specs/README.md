@@ -1,5 +1,4 @@
 # /specs — AI Prompts & Design Decisions
-<!-- CI test push -->
 
 ## AI Tools Used
 - Claude (Sonnet 4.6) — primary assistant for planning, scaffolding, and coding
