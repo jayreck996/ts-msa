@@ -28,15 +28,14 @@ jobs:
         run: dotnet publish back/QuizApi.csproj -c Release -o ./publish
 
       - name: Zip publish output
-        run: zip -r publish.zip ./publish
+        run: cd publish && zip -r ../publish.zip . && cd ..
 
       - name: Deploy via Kudu ZipDeploy
         run: |
           curl -X POST \
-            "https://quizapi-ts-msa.scm.azurewebsites.net/api/zipdeploy" \
+            "https://quizapi-ts-msa.scm.azurewebsites.net/api/zipdeploy?isAsync=false" \
             -u "${{ secrets.AZURE_WEBAPP_USERNAME }}:${{ secrets.AZURE_WEBAPP_PASSWORD }}" \
             -H "Content-Type: application/zip" \
             --data-binary @publish.zip \
-            --fail \
-            --silent \
-            --show-error
+            --max-time 300 \
+            --verbose
