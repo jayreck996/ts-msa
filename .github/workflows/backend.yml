@@ -22,16 +22,21 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Run tests
-        run: dotnet test back.tests/QuizApi.Tests.csproj --no-build --verbosity normal
-        working-directory: .
+        run: dotnet test back.tests/QuizApi.Tests.csproj --verbosity normal
 
       - name: Build & publish
         run: dotnet publish back/QuizApi.csproj -c Release -o ./publish
-        working-directory: .
 
-      - name: Deploy to Azure App Service
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: quizapi-ts-msa
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./publish
+      - name: Zip publish output
+        run: zip -r publish.zip ./publish
+
+      - name: Deploy via Kudu ZipDeploy
+        run: |
+          curl -X POST \
+            "https://quizapi-ts-msa.scm.azurewebsites.net/api/zipdeploy" \
+            -u "${{ secrets.AZURE_WEBAPP_USERNAME }}:${{ secrets.AZURE_WEBAPP_PASSWORD }}" \
+            -H "Content-Type: application/zip" \
+            --data-binary @publish.zip \
+            --fail \
+            --silent \
+            --show-error
