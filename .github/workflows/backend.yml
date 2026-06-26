@@ -38,4 +38,6 @@ jobs:
             -H "Content-Type: application/zip" \
             --data-binary @publish.zip \
             --max-time 300 \
-            --verbose
+            --fail \
+            --silent \
+            --show-error
