@@ -1,0 +1,49 @@
+name: Frontend — Build & Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'front/**'
+      - '.github/workflows/frontend.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: front/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: front
+
+      - name: Run tests
+        run: npm test
+        working-directory: front
+
+      - name: Build
+        run: npm run build
+        working-directory: front
+        env:
+          VITE_API_URL: https://quizapi-ts-msa.azurewebsites.net
+
+      - name: Deploy to Azure Blob Storage
+        uses: azure/CLI@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az storage blob upload-batch \
+              --account-name quizfrontsa \
+              --account-key "${{ secrets.AZURE_STORAGE_KEY }}" \
+              --source front/dist \
+              --destination '$web' \
+              --overwrite
