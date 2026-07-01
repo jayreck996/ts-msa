@@ -6,13 +6,18 @@ THIS FILE HOLDS EXACTLY ONE ENTRY: A SINGLE CONNECTED TREE ROOTED AT THE PROJECT
 
 FORMAT: ## ASSET:ARCHITECTURE {YYYY-MM-DD HH:MM} → {CONTENT AS SINGLE CONNECTED TREE GRAPH}
 
-## ASSET:ARCHITECTURE 2026-07-02 10:10 →
+## ASSET:ARCHITECTURE 2026-07-02 10:45 →
 ts-msa
 ├── Backend
 │   ├── .NET 10 Web API + EF Core + SQLite
 │   ├── Controllers: Users, Categories, Quizzes, Questions, Options, Attempts, Badges, Leaderboard
+│   ├── Data/AppDbContext.cs: EF Core DbContext, cascade rules
+│   ├── Program.cs: CORS, Scalar, EF Core, DB auto-create on startup
 │   ├── Scalar API docs at /scalar
-│   └── Deployed: Azure App Service F1 (quizapi-ts-msa, rg-ts-msa) via Kudu ZipDeploy REST API
+│   ├── specs/README.md: AI prompt + design-decision log (required by NZMSA assessment)
+│   └── Deployed: Azure App Service F1 (quizapi-ts-msa, rg-ts-msa)
+│       ├── azure/webapps-deploy@v3 not used — it's MSDeploy, Windows-only; App Service is Linux
+│       └── Direct curl POST to Kudu ZipDeploy REST API, basic auth via scmUri, flat zip (files at root, not nested)
 ├── Frontend
 │   ├── React + TypeScript + Vite
 │   ├── React Router pages: Home, Quizzes, Leaderboard
@@ -27,6 +32,10 @@ ts-msa
 │   ├── Levels: 1 per 100pts
 │   ├── Daily streak tracking
 │   └── Badges on milestones
-└── CI/CD (GitHub Actions, path-filtered)
-    ├── backend.yml (back/**): dotnet test → dotnet publish → curl POST Kudu ZipDeploy
-    └── frontend.yml (front/**): npm test → npm run build → az storage blob upload-batch
+├── CI/CD (GitHub Actions, path-filtered)
+│   ├── backend.yml (back/**): dotnet test → dotnet publish → curl POST Kudu ZipDeploy
+│   ├── frontend.yml (front/**): npm test → npm run build → az storage blob upload-batch
+│   └── Secrets: AZURE_WEBAPP_PUBLISH_PROFILE (backend), AZURE_STORAGE_KEY (frontend)
+└── AI Policy
+    ├── Claude, GitHub Copilot, ChatGPT explicitly allowed for this project
+    └── Usage logged in back/specs/README.md (prompts + design decisions)
