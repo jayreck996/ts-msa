@@ -7,6 +7,7 @@ THIS FILE HOLDS EXACTLY ONE ENTRY: A SINGLE CONNECTED TREE ROOTED AT THE PROJECT
 FORMAT: ## ASSET:ARCHITECTURE {YYYY-MM-DD HH:MM} → {CONTENT AS SINGLE CONNECTED TREE GRAPH}
 
 ## ASSET:ARCHITECTURE 2026-07-02 10:45 →
+```text
 ts-msa
 ├── Backend
 │   ├── .NET 10 Web API + EF Core + SQLite
@@ -39,3 +40,4 @@ ts-msa
 └── AI Policy
     ├── Claude, GitHub Copilot, ChatGPT explicitly allowed for this project
     └── Usage logged in back/specs/README.md (prompts + design decisions)
+```

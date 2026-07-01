@@ -7,6 +7,7 @@ THIS FILE HOLDS EXACTLY ONE ENTRY: A SINGLE CONNECTED TREE ROOTED AT THE PROJECT
 FORMAT: ## ISSUE:ARCHITECTURE {YYYY-MM-DD HH:MM} → {CONTENT AS SINGLE CONNECTED TREE GRAPH}
 
 ## ISSUE:ARCHITECTURE 2026-07-02 10:45 →
+```text
 ts-msa
 ├── Ephemeral SQLite storage
 │   ├── quiz.db lives on Azure App Service's ephemeral filesystem
@@ -22,3 +23,4 @@ ts-msa
     │   └── Backend deploy auth falls back to Kudu basic auth, credentials embedded in scmUri — not proper RBAC
     └── Azure Static Web Apps creation blocked (RequestDisallowedByAzure, all regions)
         └── Forced frontend onto Azure Blob Storage static website instead of the originally planned SWA
+```
