@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import Home from './pages/Home';
 import Quizzes from './pages/Quizzes';
+import QuizPage from './pages/QuizPage';
 import Leaderboard from './pages/Leaderboard';
 import Badges from './pages/Badges';
 import './App.css';
@@ -19,6 +20,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/quizzes" element={<Quizzes />} />
+          <Route path="/quizzes/:id" element={<QuizPage />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/badges" element={<Badges />} />
         </Routes>

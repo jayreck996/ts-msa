@@ -1,3 +1,44 @@
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Quiz-Play Flow Live + Two Flags (badge bug, auth placeholder)
+- Added clickable quiz-taking page: Quizzes cards -> /quizzes/:id -> QuizPage.tsx (load questions, select answers, submit, results). Verified: POST /api/attempts score 3 -> +30 pts, streak 1, leaderboard updates
+- Flag 1 (backend bug): first_quiz + perfect_score badges not awarded on the triggering attempt — badge check queries DB before SaveChanges
+- Flag 2 (frontend placeholder): QuizPage hardcodes CURRENT_USER_ID=1 (seeded demo) until JWT auth lands
+
+```text
+Badge award flow — POST /api/attempts (AttemptsController.Submit)
+└── request arrives {userId, quizId, score}
+    ├── lookup quiz → compute PointsEarned (score × difficulty multiplier)
+    ├── db.QuizAttempts.Add(attempt)          ← attempt in memory, NOT saved
+    ├── lookup user
+    │   ├── user.TotalPoints += PointsEarned   ← in-memory, visible now
+    │   ├── recompute Level + CurrentStreak     ← in-memory, visible now
+    │   └── AwardBadges(user)
+    │       ├── points_100 / points_500 → reads user.TotalPoints ✅ works
+    │       ├── streak_7             → reads user.CurrentStreak ✅ works
+    │       ├── first_quiz    → db.QuizAttempts.CountAsync(...) ✗ counts 0 (attempt unsaved)
+    │       └── perfect_score → db.QuizAttempts.AnyAsync(...)   ✗ no match (attempt unsaved)
+    └── db.SaveChanges()                        ← attempt persisted HERE, too late for the 2 badges
+
+Play-a-quiz flow — /quizzes/:id (QuizPage.tsx)
+└── user clicks a quiz card (Quizzes.tsx → Link /quizzes/:id)
+    ├── load: api.getQuiz(id) + api.getQuestions(id)
+    ├── user selects one option per question → answers{qId: optId}
+    ├── click Submit (enabled only when all answered)
+    │   ├── score = count(answers[q] === q.correctOptionId)
+    │   └── api.submitAttempt({ userId: CURRENT_USER_ID=1, quizId, score, completedAt })
+    │       └── ⚠ userId hardcoded to seeded "demo" — // TODO(auth) swap for logged-in user
+    └── show results (score/total, +pointsEarned) → links back to Quizzes / Leaderboard
+```
+
+- Fix options for Flag 1: (A) move AwardBadges after SaveChanges, or (B) count in-memory (existing + 1) — not yet applied
+
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Code Seeder Added — Build Blocked by Elevated Stray
+- Implemented back/Data/DbSeeder.cs: idempotent startup seeder (no-ops if Quizzes.Any()); seeds 3 categories, 3 quizzes (Easy/Medium/Hard), 9 questions x 4 options, 5 badges, 3 demo users (demo/alice/bob)
+- Handles the Question.CorrectOptionId <-> Option.QuestionId circular FK imperatively: save options first, then set CorrectOptionId (why not EF HasData — HasData needs hardcoded ids for the cycle)
+- Program.cs: replaced bare EnsureCreated() with DbSeeder.Seed(db) (seeder calls EnsureCreated internally)
+- C# compiles clean — build FAILED only at final copy step: elevated stray QuizApi.exe (PID 61012) locks bin output + holds port 5289; Stop-Process denied from normal shell (3rd time this session)
+- Blocker for verification: need PID 61012 killed (close its elevated -NoExit window, or Stop-Process from an elevated shell) before rebuild + run + curl /api/quizzes check
+- quiz.db (empty) deleted, ready for a clean re-seed once the process is gone
+
 ## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: /quizzes Empty — No Seed Data + Auth Plan
 - Symptom: http://localhost:5173/quizzes shows "no quizzes"
 - Root cause: NOT a port/frontend bug — GET /api/quizzes and /api/categories both return [] (DB genuinely empty)

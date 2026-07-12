@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api, type Quiz } from '../api';
 
 const diffClass: Record<string, string> = {
@@ -25,7 +26,7 @@ export default function Quizzes() {
       <div className="page-header"><h1>Quizzes</h1></div>
       {quizzes.length === 0 && <p className="empty">No quizzes yet.</p>}
       {quizzes.map(q => (
-        <div key={q.id} className="card">
+        <Link key={q.id} to={`/quizzes/${q.id}`} className="card" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <h2 style={{ flex: 1 }}>{q.title}</h2>
             <span className={`badge ${diffClass[q.difficulty] ?? ''}`}>{q.difficulty}</span>
@@ -34,7 +35,7 @@ export default function Quizzes() {
           <div className="stat-row" style={{ marginTop: '0.6rem' }}>
             <span className="stat">Category: <span>{q.category?.name ?? '—'}</span></span>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

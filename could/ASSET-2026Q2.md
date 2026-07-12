@@ -1,3 +1,32 @@
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Quiz-Play Feature — Files + Flow Reference
+- New route /quizzes/:id -> front/src/pages/QuizPage.tsx (added to App.tsx)
+- Quizzes.tsx cards wrapped in Link -> /quizzes/:id (now clickable)
+- Score computed client-side (correctOptionId is exposed by GET /api/questions), submitted via POST /api/attempts
+- Current player: hardcoded CURRENT_USER_ID=1 (seeded demo) with // TODO(auth) — swap when JWT lands
+
+```text
+Play-a-quiz flow — /quizzes/:id (QuizPage.tsx)
+└── click quiz card (Quizzes.tsx → Link /quizzes/:id)
+    ├── load: api.getQuiz(id) + api.getQuestions(id)
+    ├── select one option per question → answers{qId: optId}
+    ├── Submit (enabled only when all answered)
+    │   ├── score = count(answers[q] === q.correctOptionId)
+    │   └── api.submitAttempt({ userId:1(demo), quizId, score, completedAt })
+    └── results (score/total, +pointsEarned) → links back to Quizzes / Leaderboard
+
+Badge award gap — AttemptsController.AwardBadges
+├── points_100 / points_500 / streak_7 → in-memory user fields ✅
+└── first_quiz / perfect_score → DB query before SaveChanges ✗ (attempt not yet persisted)
+```
+
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: DbSeeder.cs — Code Seeder Implementation
+- File: back/Data/DbSeeder.cs, static DbSeeder.Seed(AppDbContext db); called from Program.cs in startup scope (replaced bare EnsureCreated)
+- Idempotent: calls EnsureCreated() then returns early if db.Quizzes.Any() — safe on every boot, survives ephemeral-SQLite redeploys
+- Seed set: 3 categories (General Knowledge, Science, Programming); 3 quizzes (World Capitals/Easy, Basic Science/Medium, Programming Fundamentals/Hard); 9 questions x 4 options; 5 badges (first_quiz, points_100, points_500, streak_7, perfect_score); 3 users (demo, alice 230pts Lv2, bob 280pts Lv2)
+- Circular FK handling: Question.CorrectOptionId <-> Option.QuestionId — imperative order (add question -> SaveChanges -> add options -> SaveChanges -> set CorrectOptionId -> SaveChanges); avoids EF HasData hardcoded-id pain
+- User PasswordHash seeded as "" for now (auth not built yet — set when JWT lands)
+- Verification pending: blocked by elevated stray QuizApi.exe holding bin lock + port 5289
+
 ## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: DB Seeding — EnsureCreated Seeds Nothing
 - GET /api/quizzes and /api/categories both return [] on this quiz.db — DB is schema-only, no rows
 - Program.cs calls Database.EnsureCreated() = creates schema, seeds ZERO data
