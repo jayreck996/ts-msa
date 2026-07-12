@@ -1,3 +1,29 @@
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Live Deploy GREEN + Deep-Link 404 Status (SPA on Blob)
+- Both deploys green: backend run 29210431707, frontend run 29210762472. Live front https://quizfrontsa.z8.web.core.windows.net/, VITE_API_URL baked to https://quizapi-ts-msa.azurewebsites.net (3 quizzes, 200)
+- Deep-link direct load (/quizzes, /quizzes/:id) returns HTTP 404 status but serves full index.html (455 bytes) -> SPA renders correct page. In-app navigation never 404s (client-side history)
+- WHY adding routes/paths does NOT fix it: /quizzes/:id route already exists in App.tsx, but that is CLIENT-SIDE React Router — only active after the SPA JS loads. The 404 comes one layer earlier from Blob storage looking for a physical blob named quizzes/5 (none exists). :id is a parameter (infinite values) so per-path blobs cannot enumerate it. SPA-fallback (errorDocument_404Path=index.html, already set) is the correct general fix; content works, only the 404 status remains
+- Clean 200 needs a rewrite layer Blob hosting lacks (Static Web Apps navigationFallback, or Front Door/CDN rewrite to /index.html) — added infra + possible Azure-for-Students restriction, skipped for demo
+
+```text
+Deep-link direct load — GET /quizzes (or /quizzes/:id) on Azure Blob static site
+└── browser requests .../quizzes
+    ├── Blob hosting looks for a blob literally named "quizzes"
+    │   └── not found (only index.html + /assets/* are real blobs)
+    ├── falls back to errorDocument_404Path = index.html
+    │   ├── serves index.html body (455B, full SPA) ✅ content correct
+    │   └── returns HTTP 404 status ⚠ (Blob hosting cannot rewrite to 200)
+    └── SPA boots despite 404 → BrowserRouter reads /quizzes → renders page ✅
+
+In-app navigation (no direct load)
+└── already on / (200) → click Link → React Router pushState → no HTTP request → no 404 ✅
+
+Where the 404 status bites / clean-200 options
+├── grader refresh/paste deep link, SEO, uptime checks → see 404 (page still renders)
+├── /quizzes/:id route exists in App.tsx but is CLIENT-SIDE → cannot change storage-layer status
+└── clean 200 requires: Static Web Apps navigationFallback, or Front Door/CDN rewrite → /index.html
+    └── ⚠ extra infra + possible Azure-for-Students limit — skip for demo
+```
+
 ## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Why the Kudu 401 Recurs (root cause of the recurrence)
 - SCM Basic Auth disable is NOT manual: Azure defaults new App Services to basic-auth allow=false (scm AND ftp) since ~mid-2024 (push to Entra/AAD-only publishing). Proof on this app: after fix SCM=true but FTP still=false (untouched default)
 - Managed tenant (autuni.ac.nz / Azure for Students) can re-disable basic auth periodically via Azure Policy for compliance — so it will likely flip back to false again; first thing to recheck if a future 401 appears

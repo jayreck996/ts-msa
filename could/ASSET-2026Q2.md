@@ -1,3 +1,18 @@
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: SPA Routing on Azure Blob — Deep-Link 404 Reference
+- Live front: https://quizfrontsa.z8.web.core.windows.net/ (storage account quizfrontsa, $web container)
+- Static website config: indexDocument=index.html, errorDocument_404Path=index.html (SPA fallback already on)
+- Behaviour: deep link (/quizzes, /quizzes/:id) serves full index.html but with HTTP 404 status; SPA renders correct page. In-app nav (client-side) never 404s
+- KEY: adding React routes does NOT fix the status — App.tsx /quizzes/:id is client-side, active only after SPA loads. 404 originates at Blob storage (no physical blob named quizzes/5); :id is a parameter so per-path blobs cannot enumerate it. SPA fallback is the correct approach
+
+```text
+GET /quizzes(/:id) → Blob storage (no matching blob)
+  → errorDocument index.html served, HTTP 404 status ⚠ (content correct ✅)
+  → SPA boots → React Router renders page
+Clean 200 options (both extra infra, skipped for demo):
+  ├── Azure Static Web Apps → staticwebapp.config.json navigationFallback
+  └── Azure Front Door / CDN → rewrite unmatched paths to /index.html
+```
+
 ## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Kudu Deploy Auth — Ownership + Drift Reference
 - SCM/FTP Basic Auth policy: Azure-owned, defaults allow=false on new apps (since ~mid-2024); managed tenants may re-disable via policy. Check: az resource show ... basicPublishingCredentialsPolicies/scm --query properties.allow. Recheck first on any future 401
 - Kudu publishing creds: Azure auto-generated, never user-set. username = $<appname> (leading $), password random at creation. list-publishing-credentials READS current values; Azure may rotate them -> stored gh secrets go stale
