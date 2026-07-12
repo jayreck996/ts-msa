@@ -1,3 +1,45 @@
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: /quizzes Empty — No Seed Data + Auth Plan
+- Symptom: http://localhost:5173/quizzes shows "no quizzes"
+- Root cause: NOT a port/frontend bug — GET /api/quizzes and /api/categories both return [] (DB genuinely empty)
+- Program.cs only calls EnsureCreated() (schema only, zero rows); earlier seeded data lived in a different quiz.db populated manually via API POSTs, not this one
+- Cloud impact: SQLite is ephemeral on Azure App Service — every redeploy/restart wipes the DB, so live demo also shows "no quizzes"; manual POST-seeding will not survive
+- Fix plan: seed IN CODE (EF HasData or startup seeder) so both local and deployed demo are populated on a fresh DB
+- Minor: front/src/api.ts still hardcodes fallback 'http://localhost:5000' (stale; harmless while .env sets 5289) — clean when touched
+- Login plan: add auth. Simplest for our infra = homegrown JWT inside the .NET API (User model already has passwordHash) — register/login endpoints, BCrypt hash, JWT + [Authorize]; no new Azure services (avoids Azure-for-Students restrictions that already blocked service principals)
+- Rejected: ASP.NET Core Identity (overkill), Entra External ID / AD B2C (heavy + likely subscription wall)
+- Ephemeral-DB caveat for auth: registered users also vanish on redeploy — seed a demo login in the same code seeder so graders can always log in
+
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Cross-Project Port Overlap with ts-recruitment-dev — Non-Issue
+- ts-recruitment-dev (Node backend) runs on 5000; its frontend on Vite 5173 — same 5173 as ts-msa frontend
+- Latent hazard now closed: ts-msa's OLD front/.env=5000 pointed straight at ts-recruitment-dev's backend — if that API were up, quiz frontend would have silently hit the WRONG backend (recruitment API answering quiz calls) instead of connection-refused; fixing ts-msa to 5289 removed this
+- Both projects run SEQUENTIALLY (never simultaneously) per Jay — so shared 5173 frontend port never actually collides; no port change needed
+- Backends never conflict anyway: 5000 (recruitment) vs 5289 (ts-msa)
+- Only discipline required: run stop.ps1 (or close dev windows) before switching projects, so no stray process holds a port into the next session
+
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Local Env Port Mismatch — Resolved
+- Fixed the 5000-vs-5289 mismatch by aligning everything to the real dev port 5289 (launchSettings.json is the source of truth; Program.cs sets no port)
+- front/.env: VITE_API_URL 5000 -> 5289
+- start.ps1: backend echo 5000 -> 5289; added section comments
+- stop.ps1: backend port 5000 -> 5289; added by-name QuizApi fallback kill (port lookup misses detached/elevated strays); cleaner log lines
+- Left front/.env.example as-is (Azure prod placeholder URL — correct)
+- Note: 5000 was ASP.NET Core's default when launchSettings.json is bypassed (published/prod); local dev overrides to 5289
+- Caveat: stray QuizApi.exe PID 42816 was elevated — Stop-Process denied from normal shell; must close its window or run stop.ps1 elevated once
+
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Local Env Startup Failure — Stray Process + Port Mismatch
+- start.ps1 backend failed: "Failed to bind to address http://127.0.0.1:5289: address already in use"
+- Root cause 1: orphaned QuizApi.exe (PID 42816) already listening on 5289 from a prior dotnet run that was never stopped/killed
+- Root cause 2: port mismatch — back/Properties/launchSettings.json binds API to localhost:5289, but front/.env has VITE_API_URL=http://localhost:5000 and start.ps1/README both claim port 5000
+- Effect: even after killing the stray process and restarting, frontend would call :5000 (nothing listening) — API requests fail
+- Frontend itself started fine standalone: http://localhost:5173
+- Not yet fixed — awaiting decision: align front/.env to 5289, or change launchSettings.json to 5000
+
+## ISSUE:-jay 2026-07-11 -> NZMSA 2026-Phase-2: Submission Logistics Recap — No Attempt Limit Found
+- Confirmed submission deadline: Sunday 2 August 2026, 11:59 PM NZST
+- Submission form: https://forms.office.com/r/tRVKyQZVZ7 (opened July 13)
+- Phase 2 spec repo: https://github.com/NZMSA/2026-Phase-2
+- Office hours: Fri July 3, July 17, July 31, 7:30-8:00 PM NZST (Discord #help-software voice)
+- Searched all could/should/must docs + repo for a resubmission/attempt cap — none documented; Microsoft Forms likely just records the latest response
+
 ## ISSUE:-jay 2026-07-02 -> NZMSA 2026-Phase-2: could/ Plan Reversed — Now Tracked in Remote
 - Previous decision (same day): gitignore could/ to keep docs local-only
 - Plan changed: could/ is meant to be pushed to remote too, not excluded

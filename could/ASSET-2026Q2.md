@@ -1,3 +1,64 @@
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: DB Seeding — EnsureCreated Seeds Nothing
+- GET /api/quizzes and /api/categories both return [] on this quiz.db — DB is schema-only, no rows
+- Program.cs calls Database.EnsureCreated() = creates schema, seeds ZERO data
+- Earlier Bob/Charlie/Alice + 3-quiz data lived in a different quiz.db populated by hand via API POSTs; not reproducible on a fresh DB
+- SQLite is ephemeral on Azure App Service: every redeploy/restart wipes the DB → live demo shows "no quizzes"; manual POST-seeding does NOT survive
+- Correct fix: seed in code (EF HasData or a startup seeder) — fixes both local and deployed demo on any fresh DB
+- Minor cleanup pending: front/src/api.ts hardcodes fallback 'http://localhost:5000' (stale; harmless while .env sets 5289)
+
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Auth Approach Decision — Homegrown JWT
+
+Infra context: .NET API on Azure App Service (Linux, ephemeral SQLite) + React on Azure Blob static site; Azure for Students (service principals already blocked). User model already has passwordHash.
+
+| Option | Fit | Verdict |
+|--------|-----|---------|
+| JWT in .NET API (register/login, BCrypt hash, issue token, [Authorize]) | Uses existing User.passwordHash; zero new cloud services; no subscription limits | ✅ chosen — simplest |
+| ASP.NET Core Identity | Adds tables/machinery not needed for a demo | overkill |
+| Entra External ID / Azure AD B2C | Managed but heavy setup + likely Students-subscription wall | avoid |
+
+- Pieces: /api/auth/register + /api/auth/login (BCrypt), JWT issuance, [Authorize] on protected controllers, frontend token store + Authorization header
+- Seed a demo login in the code seeder (ephemeral SQLite wipes users on redeploy) so graders can always log in
+
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Cross-Project Port Map — ts-msa vs ts-recruitment-dev
+
+| Project | Backend | Frontend (Vite) |
+|---------|---------|-----------------|
+| ts-recruitment-dev (Node/Express) | 5000 (backend/.env PORT=5000) | 5173 |
+| ts-msa (.NET) | 5289 | 5173 |
+
+- Backends do not conflict: 5000 vs 5289
+- Frontends share Vite default 5173 — only a conflict if run simultaneously; projects run sequentially so no real clash
+- Discipline: stop.ps1 / close dev windows before switching projects (avoid stray process holding a port)
+
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Local Env Port Config — Aligned to 5289
+
+| Component | File | Port / URL | Status |
+|-----------|------|-----------|--------|
+| Backend (http profile) | back/Properties/launchSettings.json | http://localhost:5289 | source of truth |
+| Backend (https profile) | back/Properties/launchSettings.json | https://localhost:7048;http://localhost:5289 | source of truth |
+| Frontend API target | front/.env | http://localhost:5289 | ✅ fixed (was 5000) |
+| Launcher echo | start.ps1 | http://localhost:5289 | ✅ fixed (was 5000) |
+| Stop script target | stop.ps1 | port 5289 + QuizApi name fallback | ✅ fixed (was 5000) |
+| Frontend dev server | front (Vite) | http://localhost:5173 | ✅ unchanged |
+| Prod API placeholder | front/.env.example | https://your-api.azurewebsites.net | left as-is (correct) |
+
+- start.ps1 / stop.ps1 rewritten with section comments and clearer per-port log lines
+- stop.ps1 now has a by-name QuizApi fallback kill for detached/elevated strays the port lookup misses
+
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Local Env Port Config — Backend/Frontend Mismatch
+
+| Component | File | Port / URL configured | Matches backend? |
+|-----------|------|----------------------|------------------|
+| Backend (http profile) | back/Properties/launchSettings.json | http://localhost:5289 | — (source of truth) |
+| Backend (https profile) | back/Properties/launchSettings.json | https://localhost:7048;http://localhost:5289 | — (source of truth) |
+| Frontend API target | front/.env | http://localhost:5000 | ❌ mismatch |
+| Launcher echo | start.ps1 | http://localhost:5000 | ❌ stale text |
+| Frontend dev server | front (Vite) | http://localhost:5173 | ✅ runs fine |
+| Stray process | QuizApi.exe (PID 42816) | listening on 5289 | ⚠️ blocks fresh start |
+
+- Backend actually serves on 5289; frontend + launcher scripts all point to 5000 → API calls fail even when everything "starts"
+- No fix applied yet
+
 ## ASSET:-jay 2026-07-02 -> NZMSA 2026-Phase-2: .gitignore Reverted
 - Removed `could/` line from .gitignore (added earlier same day, now reversed)
 - could/ folder (ISSUE-2026Q2.md, ASSET-2026Q2.md) now untracked-but-includable — will be git add'ed and pushed
