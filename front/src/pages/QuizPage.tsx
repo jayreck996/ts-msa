@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { api, type Quiz, type Question } from '../api';
 
 // TODO(auth): replace with the logged-in user's id once JWT auth lands.
@@ -14,7 +14,6 @@ interface Result { score: number; total: number; pointsEarned: number; }
 export default function QuizPage() {
   const { id } = useParams();
   const quizId = Number(id);
-  const navigate = useNavigate();
 
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);

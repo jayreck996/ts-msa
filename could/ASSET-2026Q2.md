@@ -1,3 +1,22 @@
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Kudu Deploy Auth — Ownership + Drift Reference
+- SCM/FTP Basic Auth policy: Azure-owned, defaults allow=false on new apps (since ~mid-2024); managed tenants may re-disable via policy. Check: az resource show ... basicPublishingCredentialsPolicies/scm --query properties.allow. Recheck first on any future 401
+- Kudu publishing creds: Azure auto-generated, never user-set. username = $<appname> (leading $), password random at creation. list-publishing-credentials READS current values; Azure may rotate them -> stored gh secrets go stale
+- If a future 401: (1) is SCM basic auth still true? (2) re-copy fresh creds into gh secrets. Workflow's '$'-safe env-var handling is permanent, no need to touch again
+- FTP basic auth left at default false (only SCM needed for ZipDeploy) — expected, not a bug
+
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Backend Deploy — Full 401 Fix + Azure /home Persistence
+Three independent things must ALL be right for Kudu ZipDeploy to succeed:
+
+| Requirement | Check | Fix |
+|-------------|-------|-----|
+| SCM Basic Auth enabled | az resource show ... basicPublishingCredentialsPolicies/scm --query properties.allow | az resource update ... --set properties.allow=true |
+| Fresh Kudu creds in secrets | live 401 despite basic auth on | az webapp deployment list-publishing-credentials -> gh secret set AZURE_WEBAPP_USERNAME/PASSWORD --body |
+| Username '$'-safe in workflow | username = $quizapi-ts-msa (leading $) | pass via env: KUDU_USER/KUDU_PASS, use -u "$KUDU_USER:$KUDU_PASS" (bash does not re-expand env-var values) |
+
+- gh secret set: use --body <value>, NOT stdin pipe (PowerShell pipe can append CR/newline into the secret)
+- Verify live: Invoke-WebRequest https://quizapi-ts-msa.azurewebsites.net/api/quizzes -> 200
+- AZURE PERSISTENCE (correction): App Service /home is PERSISTENT storage; only /tmp is ephemeral. quiz.db under content root survives redeploys, so DbSeeder no-ops when prod DB already has rows. Earlier "SQLite ephemeral on Azure" note only holds if the db lives in /tmp (it doesn't here)
+
 ## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Deploy Auth — Kudu Creds Refresh Recipe (recurrence)
 - backend.yml auths Kudu ZipDeploy with GitHub secrets AZURE_WEBAPP_USERNAME + AZURE_WEBAPP_PASSWORD (from scmUri, NOT publish-profile XML)
 - Symptom of stale creds: curl (22) HTTP 401 at Deploy step, build/tests green

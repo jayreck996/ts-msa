@@ -1,3 +1,22 @@
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Why the Kudu 401 Recurs (root cause of the recurrence)
+- SCM Basic Auth disable is NOT manual: Azure defaults new App Services to basic-auth allow=false (scm AND ftp) since ~mid-2024 (push to Entra/AAD-only publishing). Proof on this app: after fix SCM=true but FTP still=false (untouched default)
+- Managed tenant (autuni.ac.nz / Azure for Students) can re-disable basic auth periodically via Azure Policy for compliance — so it will likely flip back to false again; first thing to recheck if a future 401 appears
+- Kudu creds are AUTO-generated/managed by Azure, never set by us: username = '$' + appname ($quizapi-ts-msa), password = random generated at app creation; list-publishing-credentials READS them
+- Azure can ROTATE these creds (reset / config changes / platform events) -> GitHub secrets become a stale snapshot -> 401. Refreshing = re-copy current snapshot
+- Net: two independent Azure-managed drifts (basic-auth trending OFF, creds rotating) both cause the same 401; env-var workflow fix makes the '$' username permanently safe, but basic-auth toggle + cred freshness stay manual touchpoints on this subscription
+
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Backend Deploy GREEN — 3 Stacked Causes + Persistent-DB Finding
+- Backend deploy now succeeds (run 29210431707); https://quizapi-ts-msa.azurewebsites.net/api/quizzes -> HTTP 200
+- The 401 had THREE stacked causes, all fixed:
+  1. SCM Basic Auth disabled on quizapi-ts-msa (allow=false) -> re-enabled: az resource update --resource-group rg-ts-msa --name scm --namespace Microsoft.Web --resource-type basicPublishingCredentialsPolicies --parent sites/quizapi-ts-msa --set properties.allow=true
+  2. Stored Kudu secrets stale -> refreshed AZURE_WEBAPP_USERNAME/PASSWORD from az webapp deployment list-publishing-credentials (set via gh secret set --body, NOT stdin pipe which risks trailing newline)
+  3. Kudu username is $quizapi-ts-msa (leading $) -> injected into bash -u "${{ secrets... }}" double-quoted string, bash expanded $quizapi as unset var -> mangled username -> 401. Fixed backend.yml to pass creds via env: (KUDU_USER/KUDU_PASS) since bash does not re-expand env-var VALUES
+- Local Invoke-WebRequest test with fresh creds returned 200 (no bash involved) which is why cause 3 was masked locally
+- PERSISTENT-DB FINDING (docs assumption was wrong): live /api/quizzes returned 3 quizzes with DIFFERENT titles than DbSeeder (Science Basics/Tech Trivia/World History vs seeder's World Capitals/Basic Science/Programming Fundamentals) -> prod DB already had rows -> seeder correctly no-op'd (Quizzes.Any())
+  - Azure App Service /home is PERSISTENT (only /tmp is ephemeral); quiz.db under content root survived redeploy. Prior "SQLite is ephemeral on Azure" note is INACCURATE for /home-hosted db
+  - Implication: seeder only populates a genuinely fresh DB (new app, or /home/quiz.db deleted); live demo already has content
+- Auth (JWT) note unaffected: users under /home-hosted db would actually persist too (contrary to earlier ephemeral caveat)
+
 ## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Deploy — Backend 401 (Kudu creds stale, RECURRENCE) + Frontend Test Fix
 - Pushed feat commit -> both CI deploys ran, both failed at DIFFERENT stages
 - Backend: build + tests passed; FAILED only at Deploy via Kudu ZipDeploy -> curl (22) HTTP 401 Unauthorized
