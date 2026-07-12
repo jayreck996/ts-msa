@@ -1,3 +1,14 @@
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Deploy Auth — Kudu Creds Refresh Recipe (recurrence)
+- backend.yml auths Kudu ZipDeploy with GitHub secrets AZURE_WEBAPP_USERNAME + AZURE_WEBAPP_PASSWORD (from scmUri, NOT publish-profile XML)
+- Symptom of stale creds: curl (22) HTTP 401 at Deploy step, build/tests green
+- Refresh: az webapp deployment list-publishing-credentials --name quizapi-ts-msa --resource-group rg-ts-msa
+  -> scmUri = https://USER:PASS@quizapi-ts-msa.scm.azurewebsites.net
+  -> $uri=[Uri]$creds.scmUri; user=$uri.UserInfo.Split(':')[0]; pass=$uri.UserInfo.Split(':')[1]
+  -> gh secret set AZURE_WEBAPP_USERNAME / AZURE_WEBAPP_PASSWORD --repo jayreck996/ts-msa
+- If still 401: SCM Basic Auth Publishing Credentials disabled -> re-enable (Portal > quizapi-ts-msa > Configuration > General settings) or az resource update .../basicPublishingCredentialsPolicies/scm allow=true
+- Re-run without new commit: gh run rerun <id> --repo jayreck996/ts-msa, or workflow_dispatch (both workflows have it)
+- Frontend test note: components using react-router <Link>/<NavLink> must have their tests wrapped in <MemoryRouter> or they throw on null router context
+
 ## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Quiz-Play Feature — Files + Flow Reference
 - New route /quizzes/:id -> front/src/pages/QuizPage.tsx (added to App.tsx)
 - Quizzes.tsx cards wrapped in Link -> /quizzes/:id (now clickable)

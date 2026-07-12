@@ -1,3 +1,13 @@
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Deploy — Backend 401 (Kudu creds stale, RECURRENCE) + Frontend Test Fix
+- Pushed feat commit -> both CI deploys ran, both failed at DIFFERENT stages
+- Backend: build + tests passed; FAILED only at Deploy via Kudu ZipDeploy -> curl (22) HTTP 401 Unauthorized
+  - Same failure + cause as 2026-06-26 "Credentials 401": scmUri Kudu creds stored as GitHub secrets AZURE_WEBAPP_USERNAME / AZURE_WEBAPP_PASSWORD have gone stale (Azure rotates SCM publishing creds; or SCM Basic Auth disabled on quizapi-ts-msa)
+  - NOT a code issue — deploy-auth only
+  - Fix recipe (from ASSET 2026-06-26): az webapp deployment list-publishing-credentials --name quizapi-ts-msa --resource-group rg-ts-msa -> extract user/pass from scmUri -> gh secret set AZURE_WEBAPP_USERNAME / AZURE_WEBAPP_PASSWORD -> if still 401, re-enable SCM Basic Auth Publishing Credentials in Portal -> gh run rerun (or workflow_dispatch)
+  - BLOCKER: needs authenticated az session (interactive az login) — deferred to Jay
+- Frontend: FAILED at Run tests — my QuizPage work added <Link> to Quizzes.tsx, which broke Quizzes.test.tsx (rendered <Quizzes/> without Router -> "Cannot destructure 'basename' of useContext() as null")
+  - Fix: wrap test renders in <MemoryRouter> (renderQuizzes helper); 9/9 tests pass locally -> pushed to re-trigger frontend deploy
+
 ## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Quiz-Play Flow Live + Two Flags (badge bug, auth placeholder)
 - Added clickable quiz-taking page: Quizzes cards -> /quizzes/:id -> QuizPage.tsx (load questions, select answers, submit, results). Verified: POST /api/attempts score 3 -> +30 pts, streak 1, leaderboard updates
 - Flag 1 (backend bug): first_quiz + perfect_score badges not awarded on the triggering attempt — badge check queries DB before SaveChanges
