@@ -31,10 +31,16 @@ jobs:
         run: cd publish && zip -r ../publish.zip . && cd ..
 
       - name: Deploy via Kudu ZipDeploy
+        # Creds via env: the Kudu username starts with '$' ($quizapi-ts-msa); injecting
+        # it directly into a double-quoted bash string makes bash expand it. Env-var
+        # VALUES are not re-expanded, so pass them through env and use -u "$USER:$PASS".
+        env:
+          KUDU_USER: ${{ secrets.AZURE_WEBAPP_USERNAME }}
+          KUDU_PASS: ${{ secrets.AZURE_WEBAPP_PASSWORD }}
         run: |
           curl -X POST \
             "https://quizapi-ts-msa.scm.azurewebsites.net/api/zipdeploy?isAsync=false" \
-            -u "${{ secrets.AZURE_WEBAPP_USERNAME }}:${{ secrets.AZURE_WEBAPP_PASSWORD }}" \
+            -u "$KUDU_USER:$KUDU_PASS" \
             -H "Content-Type: application/zip" \
             --data-binary @publish.zip \
             --max-time 300 \
