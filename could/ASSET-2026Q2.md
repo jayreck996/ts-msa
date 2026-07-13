@@ -1,3 +1,21 @@
+## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Deep-Link Request Breakdown — #1/#2/#3 (route vs file vs API)
+
+```text
+                    │ #1  GET /quizzes/1      │ #2  GET /assets/…js    │ #3  GET /api/questions?quizId=1
+────────────────────┼─────────────────────────┼────────────────────────┼──────────────────────────────────
+Host                │ quizfrontsa (Blob)      │ quizfrontsa (Blob)     │ quizapi-ts-msa (App Service)
+What's requested    │ a ROUTE (virtual)       │ a FILE (physical)      │ an API ENDPOINT (code)
+Does target exist?  │ ✗ no blob "quizzes/1"   │ ✓ real hashed blob     │ ✓ controller handles it
+How it's served     │ errorDocument fallback  │ direct blob read       │ ASP.NET routing → DB query
+                    │  → index.html body      │                        │
+HTTP status         │ 404 ⚠ (body still sent) │ 200 ✅                 │ 200 ✅
+Payload             │ SPA shell (455 B HTML)  │ JS bundle (241 KB)     │ quiz-1 questions (JSON)
+Role in page load   │ boots the app           │ runs React             │ fills the page with data
+```
+
+- Only #1 (virtual route on a file-only host) 404s; #2 is a real file, #3 is a separate origin — both 200
+- 404 status carries a valid body -> browser runs it -> app boots + fetches API normally. Cosmetic only
+
 ## ASSET:-jay 2026-07-13 -> NZMSA 2026-Phase-2: SPA Routing on Azure Blob — Deep-Link 404 Reference
 - Live front: https://quizfrontsa.z8.web.core.windows.net/ (storage account quizfrontsa, $web container)
 - Static website config: indexDocument=index.html, errorDocument_404Path=index.html (SPA fallback already on)

@@ -1,3 +1,24 @@
+## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Deep-Link 404 Confirmed Cosmetic — Two Origins, Payloads OK
+- Verified live: /quizzes/1 shell returns 404 STATUS but full index.html body (455B) is still delivered; browser runs it; JS bundle + API both 200 -> page renders with real data. 404 != unreachable
+- Root distinction: frontend shell (Blob, file-only host) vs backend API (App Service, real routing) are DIFFERENT origins; Blob 404 has zero bearing on the API
+- The 3 requests on a direct /quizzes/1 visit compared:
+
+```text
+                    │ #1  GET /quizzes/1      │ #2  GET /assets/…js    │ #3  GET /api/questions?quizId=1
+────────────────────┼─────────────────────────┼────────────────────────┼──────────────────────────────────
+Host                │ quizfrontsa (Blob)      │ quizfrontsa (Blob)     │ quizapi-ts-msa (App Service)
+What's requested    │ a ROUTE (virtual)       │ a FILE (physical)      │ an API ENDPOINT (code)
+Does target exist?  │ ✗ no blob "quizzes/1"   │ ✓ real hashed blob     │ ✓ controller handles it
+How it's served     │ errorDocument fallback  │ direct blob read       │ ASP.NET routing → DB query
+                    │  → index.html body      │                        │
+HTTP status         │ 404 ⚠ (body still sent) │ 200 ✅                 │ 200 ✅
+Payload             │ SPA shell (455 B HTML)  │ JS bundle (241 KB)     │ quiz-1 questions (JSON)
+Role in page load   │ boots the app           │ runs React             │ fills the page with data
+```
+
+- #1 vs #2: same Blob host, but #1 is a virtual route (no file -> 404 fallback) while #2 is a real uploaded file (200). #3 is a separate origin (API) unaffected by the Blob 404
+- Live proof: #1 -> 404/455B index.html, #2 /assets/index-CjBLE9bm.js -> 200/241KB, #3 -> 200 real JSON (quiz-1 = Science Basics: "chemical symbol for water" H2O)
+
 ## ISSUE:-jay 2026-07-13 -> NZMSA 2026-Phase-2: Live Deploy GREEN + Deep-Link 404 Status (SPA on Blob)
 - Both deploys green: backend run 29210431707, frontend run 29210762472. Live front https://quizfrontsa.z8.web.core.windows.net/, VITE_API_URL baked to https://quizapi-ts-msa.azurewebsites.net (3 quizzes, 200)
 - Deep-link direct load (/quizzes, /quizzes/:id) returns HTTP 404 status but serves full index.html (455 bytes) -> SPA renders correct page. In-app navigation never 404s (client-side history)
