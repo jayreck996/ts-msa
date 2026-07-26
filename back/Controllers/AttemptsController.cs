@@ -57,11 +57,18 @@ public class AttemptsController(AppDbContext db) : ControllerBase
 
             if (user.CurrentStreak > user.LongestStreak)
                 user.LongestStreak = user.CurrentStreak;
-
-            await AwardBadges(user);
         }
 
+        // Persist the attempt + user stats first so badge checks below (which query
+        // the DB for attempt counts / perfect scores) see this attempt as already saved.
         await db.SaveChangesAsync();
+
+        if (user is not null)
+        {
+            await AwardBadges(user);
+            await db.SaveChangesAsync();
+        }
+
         return CreatedAtAction(nameof(GetById), new { id = attempt.Id }, attempt);
     }
 
