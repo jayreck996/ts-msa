@@ -1,4 +1,7 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using QuizApi.Data;
 using QuizApi.Models;
@@ -7,6 +10,7 @@ namespace QuizApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[EnableRateLimiting("api")]
 public class AttemptsController(AppDbContext db) : ControllerBase
 {
     [HttpGet]
@@ -24,8 +28,16 @@ public class AttemptsController(AppDbContext db) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Submit(QuizAttempt attempt)
     {
+        // Authoritative user id comes from the JWT, never the request body,
+        // so a caller can't submit an attempt on someone else's behalf.
+        var subject = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (subject is null || !int.TryParse(subject, out var authenticatedUserId))
+            return Unauthorized();
+        attempt.UserId = authenticatedUserId;
+
         var quiz = await db.Quizzes.FindAsync(attempt.QuizId);
         if (quiz is null) return BadRequest("Quiz not found");
 

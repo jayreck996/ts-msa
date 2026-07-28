@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace QuizApi.Models;
 
 public class User
@@ -5,6 +7,8 @@ public class User
     public int Id { get; set; }
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+
+    [JsonIgnore]
     public string PasswordHash { get; set; } = string.Empty;
     public int TotalPoints { get; set; }
     public int Level { get; set; }
