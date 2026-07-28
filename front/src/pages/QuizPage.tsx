@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { api, type Quiz, type Question } from '../api';
-
-// TODO(auth): replace with the logged-in user's id once JWT auth lands.
-const CURRENT_USER_ID = 1; // seeded "demo" user
+import { useAuthStore } from '../store/authStore';
 
 const diffClass: Record<string, string> = {
   Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard',
@@ -14,6 +12,7 @@ interface Result { score: number; total: number; pointsEarned: number; }
 export default function QuizPage() {
   const { id } = useParams();
   const quizId = Number(id);
+  const token = useAuthStore(s => s.token);
 
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -42,7 +41,6 @@ export default function QuizPage() {
       (n, q) => n + (answers[q.id] === q.correctOptionId ? 1 : 0), 0);
     try {
       const attempt = await api.submitAttempt({
-        userId: CURRENT_USER_ID,
         quizId,
         score,
         completedAt: new Date().toISOString(),
@@ -55,6 +53,7 @@ export default function QuizPage() {
     }
   }
 
+  if (!token) return <Navigate to="/login" replace />;
   if (loading) return <div className="container"><p className="empty">Loading...</p></div>;
   if (error) return <div className="container"><p className="empty">{error}</p></div>;
   if (!quiz) return <div className="container"><p className="empty">Quiz not found.</p></div>;

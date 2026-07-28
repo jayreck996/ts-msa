@@ -1,9 +1,16 @@
+import { useAuthStore } from './store/authStore';
+
 const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}/api/${path}`, options);
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   return res.json();
+}
+
+function authHeaders(): HeadersInit {
+  const token = useAuthStore.getState().token;
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 export const api = {
@@ -27,7 +34,17 @@ export const api = {
   getOptions: (questionId: number) => request<Option[]>(`options?questionId=${questionId}`),
 
   // Attempts
-  submitAttempt: (body: Partial<QuizAttempt>) => request<QuizAttempt>('attempts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }),
+  submitAttempt: (body: Partial<QuizAttempt>) => request<QuizAttempt>('attempts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify(body),
+  }),
+
+  // Auth
+  register: (body: { username: string; email: string; password: string }) =>
+    request<AuthResponse>('auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }),
+  login: (body: { username: string; password: string }) =>
+    request<AuthResponse>('auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }),
 
   // Badges
   getBadges: () => request<Badge[]>('badges'),
@@ -46,3 +63,4 @@ export interface QuizAttempt { id: number; userId: number; quizId: number; score
 export interface Badge { id: number; name: string; description: string; requirement: string; }
 export interface UserBadge { id: number; userId: number; badgeId: number; earnedAt: string; badge: Badge; }
 export interface LeaderboardEntry { id: number; username: string; totalPoints: number; level: number; currentStreak: number; }
+export interface AuthResponse { token: string; userId: number; username: string; }

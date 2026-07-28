@@ -1,4 +1,4 @@
-:root {
+:root, :root[data-theme="dark"] {
   --bg: #0f0f13;
   --surface: #1a1a24;
   --border: #2a2a38;
@@ -9,17 +9,36 @@
   --green: #22c55e;
   --yellow: #eab308;
   --red: #ef4444;
+  --heading: #fff;
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f4f7;
+  --surface: #ffffff;
+  --border: #dcdce4;
+  --accent: #7c3aed;
+  --accent-light: #6d28d9;
+  --text: #1f2430;
+  --muted: #5b6472;
+  --green: #16a34a;
+  --yellow: #a16207;
+  --red: #dc2626;
+  --heading: #111318;
+}
+
+:root {
   font: 16px/1.6 system-ui, sans-serif;
   color: var(--text);
   background: var(--bg);
+  transition: background 0.15s, color 0.15s;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { min-height: 100svh; }
 #root { min-height: 100svh; display: flex; flex-direction: column; }
 
-h1 { font-size: 2rem; font-weight: 700; color: #fff; }
-h2 { font-size: 1.25rem; font-weight: 600; color: #fff; }
+h1 { font-size: 2rem; font-weight: 700; color: var(--heading); }
+h2 { font-size: 1.25rem; font-weight: 600; color: var(--heading); }
 
 .navbar {
   display: flex;
@@ -32,7 +51,16 @@ h2 { font-size: 1.25rem; font-weight: 600; color: #fff; }
 }
 .brand { font-weight: 700; font-size: 1.1rem; color: var(--accent-light); margin-right: auto; }
 .navbar a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
-.navbar a:hover, .navbar a.active { color: #fff; }
+.navbar a:hover, .navbar a.active { color: var(--heading); }
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.3rem 0.6rem;
+  margin-left: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
 
 .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; width: 100%; }
 
@@ -65,7 +93,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 .rank-2 td:first-child { color: #94a3b8; font-weight: 700; }
 .rank-3 td:first-child { color: #b45309; font-weight: 700; }
 
-input[type=number], input[type=text] {
+input[type=number], input[type=text], input[type=password] {
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text);
